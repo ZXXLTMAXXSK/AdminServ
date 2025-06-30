@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AdminChat - Registro</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1f1f1f, #3d3d3d);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 15px;
+      min-height: 100vh;
+    }
+
+    .typing-text {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 30px;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid white;
+      min-height: 2.5rem;
+      max-width: 100%;
+    }
+
+    .form-container {
+      background-color: #2c2c2c;
+      padding: 25px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    input, select {
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      background: #444;
+      color: white;
+      font-size: 0.95rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #00c6ff;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0088cc;
+    }
+
+    @media (max-width: 500px) {
+      .typing-text {
+        font-size: 1.3rem;
+      }
+
+      .form-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="typing-text" id="typing"></h1>
+
+  <div class="form-container" id="formulario" style="display: none;">
+    <h2>Registro</h2>
+    <form id="registroForm">
+      <input type="text" name="nombre" placeholder="Nombre completo" required />
+      <input type="number" name="edad" placeholder="Edad" required />
+      <select name="sexo" required>
+        <option value="">Sexo</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+      </select>
+      <input type="email" name="email" placeholder="Correo" required />
+      <input type="password" name="password" placeholder="Contraseña" required />
+      <button type="submit">Registrarse</button>
+    </form>
+  </div>
+
+  <!-- Librerías necesarias -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    // 🧠 Mostrar ventana de Términos
+    Swal.fire({
+  title: 'Términos y Condiciones',
+  html: `
+    <p>Al continuar, aceptas que el sistema AdminChat solicitará un código de confirmación únicamente para que el servidor "<strong>ZeltAdminServ2025</strong>" pueda darte un saludo cordial.</p>
+    <p>Esto <strong>NO</strong> accede a tus datos privados, ni viola tu privacidad. Es una medida de bienvenida segura y amigable.</p>
+    <hr style="margin: 10px 0; border-color: #444;">
+    <p>📎 <strong>IMPORTANTE:</strong> El archivo PDF que se descarga al registrarte debe ser enviado al protagonista del servidor.</p>
+    <p>Él lo subirá de forma segura al sistema <strong>ZeltAdminServ2025</strong> y el chatbot AdminChat te reenviará ese PDF acompañado de un <strong>saludo personalizado</strong>.</p>
+    <hr style="margin: 10px 0; border-color: #444;">
+    <p>¿Aceptas continuar?</p>
+  `,
+  icon: 'info',
+  confirmButtonText: 'Sí, aceptar y continuar',
+  allowOutsideClick: false,
+  allowEscapeKey: false,
+  backdrop: true
+});
+    // 🧠 Animación de texto infinita
+    const textElement = document.getElementById('typing');
+    const message = "Hola!, me llamo AdminChat";
+    let index = 0;
+    let deleting = false;
+
+    function animateText() {
+      if (!deleting) {
+        textElement.textContent = message.slice(0, index + 1);
+        index++;
+        if (index === message.length) {
+          deleting = true;
+          setTimeout(animateText, 1500);
+          return;
+        }
+      } else {
+        textElement.textContent = message.slice(0, index - 1);
+        index--;
+        if (index === 0) {
+          deleting = false;
+        }
+      }
+      setTimeout(animateText, deleting ? 80 : 120);
+    }
+    animateText();
+
+    // 🧠 Manejo del formulario
+    document.getElementById("registroForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const nombre = form.nombre.value;
+      const edad = form.edad.value;
+      const sexo = form.sexo.value;
+      const email = form.email.value;
+      const password = form.password.value;
+
+      // Mostrar alerta con los datos
+      Swal.fire({
+        title: '¡Registro exitoso!',
+        html: `
+          <strong>Nombre:</strong> ${nombre}<br>
+          <strong>Edad:</strong> ${edad}<br>
+          <strong>Sexo:</strong> ${sexo}<br>
+          <strong>Correo:</strong> ${email}<br>
+          <strong>Contraseña:</strong> ${password}
+        `,
+        icon: 'success',
+        confirmButtonText: 'Descargar PDF'
+      }).then(() => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(16);
+        doc.text("Datos de Registro - AdminChat", 20, 20);
+        doc.setFontSize(12);
+        doc.text(`Nombre: ${nombre}`, 20, 40);
+        doc.text(`Edad: ${edad}`, 20, 50);
+        doc.text(`Sexo: ${sexo}`, 20, 60);
+        doc.text(`Correo: ${email}`, 20, 70);
+        doc.text(`Contraseña: ${password}`, 20, 80);
+        doc.save("registro_adminchat.pdf");
+      });
+
+      form.reset();
+    });
+  </script>
+</body>
+</html>
