@@ -41,6 +41,7 @@
       width: 100%;
       max-width: 400px;
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
+      display: none;
     }
 
     h2 {
@@ -90,7 +91,7 @@
 <body>
   <h1 class="typing-text" id="typing"></h1>
 
-  <div class="form-container" id="formulario" style="display: none;">
+  <div class="form-container" id="formulario">
     <h2>Registro</h2>
     <form id="registroForm">
       <input type="text" name="nombre" placeholder="Nombre completo" required />
@@ -113,22 +114,27 @@
   <script>
     // 🧠 Mostrar ventana de Términos
     Swal.fire({
-  title: 'Términos y Condiciones',
-  html: `
-    <p>Al continuar, aceptas que el sistema AdminChat solicitará un código de confirmación únicamente para que el servidor "<strong>ZeltAdminServ2025</strong>" pueda darte un saludo cordial.</p>
-    <p>Esto <strong>NO</strong> accede a tus datos privados, ni viola tu privacidad. Es una medida de bienvenida segura y amigable.</p>
-    <hr style="margin: 10px 0; border-color: #444;">
-    <p>📎 <strong>IMPORTANTE:</strong> El archivo PDF que se descarga al registrarte debe ser enviado al protagonista del servidor.</p>
-    <p>Él lo subirá de forma segura al sistema <strong>ZeltAdminServ2025</strong> y el chatbot AdminChat te reenviará ese PDF acompañado de un <strong>saludo personalizado</strong>.</p>
-    <hr style="margin: 10px 0; border-color: #444;">
-    <p>¿Aceptas continuar?</p>
-  `,
-  icon: 'info',
-  confirmButtonText: 'Sí, aceptar y continuar',
-  allowOutsideClick: false,
-  allowEscapeKey: false,
-  backdrop: true
-});
+      title: 'Términos y Condiciones',
+      html: `
+        <p>Al continuar, aceptas que el sistema AdminChat solicitará un código de confirmación únicamente para que el servidor "<strong>ZeltAdminServ2025</strong>" pueda darte un saludo cordial.</p>
+        <p>Esto <strong>NO</strong> accede a tus datos privados, ni viola tu privacidad. Es una medida de bienvenida segura y amigable.</p>
+        <hr style="margin: 10px 0; border-color: #444;">
+        <p>📎 <strong>IMPORTANTE:</strong> El archivo PDF que se descarga al registrarte debe ser enviado al protagonista del servidor.</p>
+        <p>Él lo subirá de forma segura al sistema <strong>ZeltAdminServ2025</strong> y el chatbot AdminChat te reenviará ese PDF acompañado de un <strong>saludo personalizado</strong>.</p>
+        <hr style="margin: 10px 0; border-color: #444;">
+        <p>¿Aceptas continuar?</p>
+      `,
+      icon: 'info',
+      confirmButtonText: 'Sí, aceptar y continuar',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      backdrop: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('formulario').style.display = 'block';
+      }
+    });
+
     // 🧠 Animación de texto infinita
     const textElement = document.getElementById('typing');
     const message = "Hola!, me llamo AdminChat";
